@@ -1,0 +1,15 @@
+{
+  "name": "Japón 2026",
+  "short_name": "Japón 2026",
+  "description": "Tu guía de viaje a Japón: itinerario, mapa, frases y ayuda.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef3fb",
+  "theme_color": "#eef3fb",
+  "lang": "es",
+  "icons": [
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

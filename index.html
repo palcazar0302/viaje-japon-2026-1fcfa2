@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#eef3fb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Japón 2026">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<title>Japón 2026</title>
+<style>
+  :root{
+    --bg1:#eef3fb; --bg2:#e4ecf8; --bg3:#f4f1fb;
+    --ink:#1f2430; --ink2:#5b6478; --ink3:#8a93a6;
+    --card:#ffffff; --line:#e9edf5;
+    --blue:#2f6df6; --blue-d:#1d54d6; --blue-soft:#e8f0ff;
+    --green:#1fb866; --green-d:#16a058;
+    --amber:#f4b740; --amber-soft:#fef3da;
+    --red:#e7546b; --red-soft:#fde9ec;
+    --teal:#13b5c4; --cyan:#22c3e6;
+    --purple:#8b5cf6; --purple-soft:#efeafe;
+    --slate:#64748b;
+    --radius:22px; --radius-lg:26px;
+    --shadow:0 10px 30px -12px rgba(31,46,84,.18), 0 2px 8px -4px rgba(31,46,84,.10);
+    --shadow-sm:0 4px 14px -8px rgba(31,46,84,.22);
+    --maxw:520px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 40%,var(--bg3) 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{max-width:var(--maxw);margin:0 auto;padding:0 16px calc(96px + env(safe-area-inset-bottom));padding-top:max(14px,env(safe-area-inset-top))}
+  .view{animation:fade .28s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* Headers */
+  h1,h2,h3{margin:0;letter-spacing:-.02em}
+  .page-title{font-size:30px;font-weight:900;margin-top:6px}
+  .page-sub{color:var(--ink2);font-size:15px;margin-top:4px;line-height:1.35;font-weight:500}
+  .jp{color:var(--blue);font-weight:600}
+  .section-h{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;margin:22px 4px 12px}
+  .section-h .ic{font-size:18px}
+  .sub-section{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase;margin:18px 6px 10px;display:flex;align-items:center;gap:7px}
+
+  /* Cards */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+  .card.tight{padding:14px}
+  .grad{position:relative;overflow:hidden}
+
+  /* Photo with gradient fallback */
+  .photo{position:relative;width:100%;background-size:cover;background-position:center;border-radius:18px;overflow:hidden}
+  .photo .ph-emoji{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:54px;opacity:.92}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;opacity:0;transition:opacity .4s}
+  .photo img.loaded{opacity:1}
+  .photo .overlay{position:absolute;inset:0}
+  .photo .dc-txt{position:absolute;left:16px;right:16px;bottom:14px;color:#fff}
+
+  /* Hero */
+  .hero{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);margin-bottom:6px;position:relative;height:210px;display:flex;align-items:flex-end}
+  .hero .ph-emoji{font-size:84px}
+  .hero-grad{position:absolute;inset:0;background:linear-gradient(160deg,#7fb2ff,#3b6fd4 55%,#21407e)}
+  .hero-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.55))}
+  .hero-txt{position:relative;padding:20px;color:#fff}
+  .hero-txt .scr{font-family:'Caveat',cursive;font-size:46px;line-height:.9;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+  .hero-txt .dates{font-size:15px;font-weight:600;margin-top:6px;opacity:.95}
+  .countdown{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:13px;padding:5px 11px;border-radius:999px;margin-top:10px}
+
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;font-family:inherit;font-weight:700;font-size:15px;padding:12px 18px;cursor:pointer;transition:transform .12s,filter .15s;text-decoration:none}
+  .btn:active{transform:scale(.96)}
+  .btn-blue{background:var(--blue);color:#fff;box-shadow:0 6px 16px -6px var(--blue)}
+  .btn-green{background:var(--green);color:#fff;box-shadow:0 6px 16px -6px var(--green)}
+  .btn-gray{background:#eef1f6;color:#3a4254}
+  .btn-ghost{background:var(--blue-soft);color:var(--blue-d)}
+  .btn-sm{padding:9px 14px;font-size:14px;border-radius:12px}
+  .btn-block{width:100%}
+  .btn-row{display:flex;gap:9px;flex-wrap:wrap}
+
+  /* Tags / chips */
+  .tag{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px}
+  .t-blue{background:var(--blue-soft);color:var(--blue-d)}
+  .t-green{background:#e4f7ec;color:var(--green-d)}
+  .t-amber{background:var(--amber-soft);color:#a9781a}
+  .t-red{background:var(--red-soft);color:#c23950}
+  .t-purple{background:var(--purple-soft);color:#6d3fd4}
+  .t-teal{background:#dff7fa;color:#0c8694}
+  .t-slate{background:#eef1f6;color:#51607a}
+  .tag-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+
+  /* Place / list rows */
+  .row{display:flex;gap:13px;align-items:center}
+  .row .photo{width:92px;height:92px;flex:0 0 92px}
+  .row .photo .ph-emoji{font-size:34px}
+  .row-body{flex:1;min-width:0}
+  .row-title{font-weight:800;font-size:16px;line-height:1.2}
+  .row-loc{display:flex;align-items:center;gap:4px;color:var(--ink2);font-size:13px;font-weight:600;margin-top:3px}
+
+  /* Callouts */
+  .callout{border-radius:16px;padding:14px 15px;margin:12px 0;font-size:14.5px;line-height:1.5}
+  .callout .co-h{font-weight:800;font-size:13px;letter-spacing:.02em;display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .co-amber{background:var(--amber-soft)}
+  .co-amber .co-h{color:#b07d14}
+  .co-blue{background:var(--blue-soft)}
+  .co-blue .co-h{color:var(--blue-d)}
+  .co-list{display:flex;flex-direction:column;gap:9px;margin:10px 0}
+  .co-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14.5px;line-height:1.45}
+
+  /* Day detail activity */
+  .act{display:flex;gap:0;flex-direction:column}
+  .act-num{width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:0 0 30px}
+
+  /* Sleep / info bar */
+  .infobar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .info-lbl{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--ink3);text-transform:uppercase;display:flex;align-items:center;gap:6px}
+  .info-main{font-weight:800;font-size:17px;margin-top:3px}
+  .info-sub{color:var(--ink2);font-size:13px;font-weight:600}
+
+  .nav-card{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+  .copy-field{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:13px 15px;margin-bottom:10px}
+  .cf-lbl{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--ink3);text-transform:uppercase}
+  .cf-val{font-weight:800;font-size:17px;margin-top:2px;word-break:break-word}
+  .copy-btn{background:none;border:none;color:var(--blue);font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;flex:0 0 auto;padding:6px}
+
+  /* Quick grid */
+  .qgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:6px}
+  .qtile{background:var(--card);border-radius:20px;box-shadow:var(--shadow-sm);padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:transform .12s}
+  .qtile:active{transform:scale(.96)}
+  .qtile .qi{width:46px;height:46px;border-radius:14px;background:var(--blue-soft);display:flex;align-items:center;justify-content:center;font-size:22px}
+  .qtile .qt{font-weight:800;font-size:15px}
+
+  /* Filters */
+  .filters{display:flex;gap:9px;overflow-x:auto;padding:4px 2px 6px;margin:0 -16px;padding-left:16px;padding-right:16px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;border:none;background:#fff;color:var(--ink2);font-weight:700;font-size:14px;padding:10px 16px;border-radius:999px;box-shadow:var(--shadow-sm);cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
+  .chip.active{background:var(--blue);color:#fff;box-shadow:0 6px 16px -8px var(--blue)}
+
+  /* Search */
+  .search{display:flex;align-items:center;gap:10px;background:#fff;border-radius:16px;box-shadow:var(--shadow-sm);padding:13px 16px;margin:6px 0 4px}
+  .search input{border:none;outline:none;font-family:inherit;font-size:15px;width:100%;background:none;color:var(--ink)}
+  .search input::placeholder{color:var(--ink3)}
+
+  /* Back */
+  .back{display:inline-flex;align-items:center;gap:6px;background:#fff;border:none;box-shadow:var(--shadow-sm);border-radius:14px;padding:9px 15px;font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;font-family:inherit;margin:2px 0 8px}
+
+  /* Phrase card */
+  .phrase .p-es{font-weight:800;font-size:16px}
+  .phrase .p-jp{color:var(--blue);font-weight:700;font-size:23px;margin:3px 0 1px;letter-spacing:0}
+  .phrase .p-ro{color:var(--ink2);font-style:italic;font-size:14px;font-weight:500}
+
+  /* Bottom nav */
+  .tabbar{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;justify-content:center;pointer-events:none}
+  .tabbar-inner{pointer-events:auto;display:flex;gap:2px;background:rgba(255,255,255,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.04);width:100%;max-width:var(--maxw);padding:8px 8px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -16px rgba(31,46,84,.3)}
+  .tab{flex:1;border:none;background:none;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:16px;cursor:pointer;color:var(--ink3);font-weight:700;font-size:11px;transition:color .15s}
+  .tab .ti{font-size:21px;line-height:1;filter:grayscale(.3) opacity(.6)}
+  .tab.active{color:var(--blue)}
+  .tab.active .ti{filter:none;transform:translateY(-1px)}
+  .tab.active{background:var(--blue-soft)}
+
+  .muted{color:var(--ink2);font-size:14.5px;line-height:1.55}
+  .pill-day{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.92);color:var(--ink);font-weight:800;font-size:13px;padding:5px 12px;border-radius:999px;backdrop-filter:blur(4px)}
+  .pill-hoy{position:absolute;top:14px;right:14px;background:var(--blue);color:#fff;font-weight:800;font-size:12px;padding:5px 11px;border-radius:999px}
+  .day-card-photo{height:150px;border-radius:20px}
+  .day-card-photo .overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.6))}
+  .day-card-photo .dc-txt{position:absolute;left:16px;right:16px;bottom:14px;color:#fff}
+  .day-card-photo .dc-date{font-size:13px;font-weight:600;opacity:.92}
+  .day-card-photo .dc-title{font-size:19px;font-weight:800;line-height:1.15;margin-top:2px}
+  .linkrow{display:flex;align-items:center;gap:8px;color:var(--blue-d);font-weight:800;font-size:15px;margin-top:13px;cursor:pointer}
+  a.clean{color:inherit;text-decoration:none}
+  .toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;font-weight:700;font-size:14px;padding:11px 20px;border-radius:999px;opacity:0;transition:.25s;z-index:99;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .small-note{font-size:12.5px;color:var(--ink3);font-weight:600;margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="tabbar"><div class="tabbar-inner" id="tabbar"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATOS DEL VIAJE  —  Edita aquí tu información
+   ============================================================ */
+const TRIP = {
+  name: "Japón 2026",
+  greetName: "viajeros",          // ← tu nombre para el saludo "¡Hola, ___!"
+  start: "2026-06-23",
+  end:   "2026-07-17",
+  datesLabel: "23 jun – 17 jul 2026",
+  heroEmoji: "🗻",
+  heroPhoto: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Lake_Kawaguchiko_Sakura_Mount_Fuji_3.jpg"
+};
+
+/* Categorías de lugares: emoji + gradiente de respaldo */
+const CATS = {
+  playa:      {label:"Playas y snorkel", emoji:"🏖️", grad:"linear-gradient(160deg,#5fd6e8,#1c9fc4)"},
+  naturaleza: {label:"Naturaleza",       emoji:"🌋", grad:"linear-gradient(160deg,#6fd99a,#1e9c63)"},
+  cultura:    {label:"Cultura y barrios",emoji:"🏮", grad:"linear-gradient(160deg,#ff9e7a,#e2563f)"},
+  comida:     {label:"Comida y cafés",   emoji:"🍵", grad:"linear-gradient(160deg,#f6c668,#d99320)"},
+  experiencia:{label:"Experiencias",     emoji:"✨", grad:"linear-gradient(160deg,#a78bfa,#7c4ddb)"},
+  mirador:    {label:"Miradores",        emoji:"🗼", grad:"linear-gradient(160deg,#8ba3c7,#4f6896)"},
+  transporte: {label:"Transporte",       emoji:"⛴️", grad:"linear-gradient(160deg,#7fb2ff,#3b6fd4)"}
+};
+
+/* LUGARES */
+const PLACES = [
+  {id:"yonehara", name:"Yonehara Beach", city:"Ishigaki", cat:"playa",
+   photo:"https://upload.wikimedia.org/wikipedia/commons/3/3c/Yonehara_Beach_Ishigaki.jpg",
+   desc:"Probablemente el mejor snorkel desde playa de Ishigaki: arrecife muy cerca de la orilla, enorme variedad de corales y muchos peces tropicales.",
+   know:"Mantente dentro de la laguna protegida. Fuera del arrecife pueden aparecer corrientes.",
+   tips:["Lleva escarpines: hay coral.","Mejor con marea media/alta.","No toques ni pises el coral."], day:3},
+  {id:"shiraho", name:"Shiraho Reef", city:"Ishigaki", cat:"playa",
+   desc:"Uno de los arrecifes de coral azul más grandes del mundo. Zona famosa entre biólogos marinos, con una laguna enorme y mucha vida marina.",
+   know:"La laguna es muy poco profunda: mejor entrar con marea media o alta.", tips:["Marea media/alta imprescindible.","Respeta el coral azul, es frágil."]},
+  {id:"sukuji", name:"Sukuji Beach", city:"Ishigaki", cat:"playa",
+   desc:"Playa amplia cerca de Kabira Bay, con agua muy tranquila y acceso fácil. Ideal para snorkel relajado.",
+   know:"Uno de los mejores sitios de la isla para ver el atardecer.", tips:["Perfecta al atardecer.","Buena para ir con niños."]},
+  {id:"yoshihara", name:"Yoshihara Beach", city:"Ishigaki", cat:"playa",
+   desc:"Muy buen coral cerca de la costa. Una alternativa más tranquila si quieres explorar la isla.", tips:["Coral cerca de la orilla."]},
+  {id:"crystal", name:"Crystal Beach", city:"Ishigaki", cat:"playa",
+   desc:"Agua extremadamente clara. Bonita para un baño y snorkel ligero.", tips:["Agua cristalina."]},
+  {id:"kabira", name:"Kabira Bay", city:"Ishigaki", cat:"mirador",
+   photo:"https://upload.wikimedia.org/wikipedia/commons/5/5a/Kabira_Bay_Ishigaki_Island_Okinawa_Japan.jpg",
+   desc:"La bahía más famosa de Ishigaki: arena blanca, islotes verdes y agua turquesa. No está permitido bañarse, pero las vistas son espectaculares.",
+   know:"Hay barcos con fondo de cristal para ver el coral y las perlas que se cultivan en la bahía.", tips:["No se puede nadar aquí.","Sube al mirador para la foto clásica."]},
+  {id:"manta", name:"Manta Scramble", city:"Ishigaki", cat:"experiencia",
+   desc:"Punto de buceo y snorkel donde se observan mantarrayas casi todo el año. Una de las experiencias estrella de Ishigaki.",
+   know:"Se llega en barco con excursión organizada (Rainbow Reef, Prime Scuba…).", tips:["Reserva la excursión con antelación.","Mejor temporada para mantas: verano."]},
+  {id:"uehara", name:"Puerto de Uehara", city:"Iriomote", cat:"transporte",
+   desc:"Puerto de llegada a Iriomote, cerca del alojamiento.",
+   know:"A veces el ferry a Uehara se cancela por el oleaje. Si pasa: coge el ferry a Ohara y un shuttle bus gratuito te lleva a Uehara (≈45-50 min). Es muy habitual y está bien organizado.", tips:["Plan B: ferry a Ohara + shuttle gratis."]},
+  {id:"iriomote", name:"Selva de Iriomote", city:"Iriomote", cat:"naturaleza",
+   desc:"La isla más salvaje de Japón: jungla, manglares y cascadas. Kayak por el río y senderismo hasta la cascada de Pinaisara.",
+   know:"Es hogar del gato montés de Iriomote, en peligro de extinción.", tips:["Kayak + trekking a Pinaisara.","Lleva repelente de insectos."]},
+  {id:"omuro", name:"Monte Omuro", city:"Ito", cat:"naturaleza",
+   desc:"Volcán con forma de cuenco perfecto al que se sube en telesilla. Vistas 360º de la península de Izu y el mar.",
+   know:"En febrero se quema toda la ladera (Yamayaki), una tradición de siglos.", tips:["Sube en telesilla.","Da la vuelta al cráter andando (~20 min)."], day:15},
+  {id:"jogasaki", name:"Costa de Jogasaki", city:"Ito", cat:"naturaleza",
+   desc:"Acantilados de lava negra con un puente colgante sobre el mar. Senderos preciosos junto a la costa.",
+   know:"La lava vino de una erupción del monte Omuro hace 4.000 años.", tips:["Cruza el puente colgante Kadowaki.","Ojo con el viento en el borde."], day:15},
+  {id:"izuzoo", name:"Izu — parque de animales", city:"Ito", cat:"experiencia",
+   desc:"Día de zoo / parque de animales en la zona de Ito. Perfecto para un día más tranquilo.", tips:["Día familiar relajado."], day:16},
+  {id:"shirahama", name:"Playa de Shirahama", city:"Shimoda", cat:"playa",
+   desc:"La playa más famosa de Shimoda: arena blanca y aguas claras. Ambiente de pueblo costero japonés.", tips:["Madruga para coger sitio en verano."], day:17},
+  {id:"cascadas", name:"Cascadas de Kawazu", city:"Shimoda", cat:"naturaleza",
+   desc:"Ruta de las siete cascadas (Nanadaru) entre bosque, con pozas y puentes. Naturaleza y onsen cerca.", tips:["Calzado cómodo para el sendero."], day:18},
+  {id:"teamlab", name:"teamLab Planets", city:"Tokio", cat:"experiencia",
+   photo:"https://upload.wikimedia.org/wikipedia/commons/8/8e/TeamLab_Borderless_2.jpg",
+   desc:"Museo digital inmersivo donde caminas por el agua y entre flores de luz. Una experiencia única.",
+   know:"Vas descalzo y te puedes mojar hasta las rodillas: lleva ropa cómoda.", tips:["RESERVA entradas online con antelación.","Evita pantalones largos ajustados."], day:21},
+  {id:"yanaka", name:"Yanaka Ginza", city:"Tokio", cat:"cultura",
+   desc:"Uno de los pocos barrios de Tokio que quedó intacto: callejuelas, tiendas tradicionales y ambiente de antaño.",
+   know:"Es famoso por sus gatos callejeros y la 'escalera del atardecer'.", tips:["Ve a media tarde.","Prueba el street food local."], day:22},
+  {id:"capibara", name:"Café Capibara (cspace)", city:"Tokio", cat:"comida",
+   desc:"Café temático donde tomar algo rodeado de capibaras. Higashimukojima 1-31-3, Sumida, Tokyo 131-0032.",
+   know:"Suele necesitar reserva previa.", tips:["Reserva antes de ir.","Zona de Sumida, cerca de Skytree."], day:22}
+];
+
+/* HOTELES */
+const HOTELS = [
+  {id:"h1", name:"Casa Ishigaki (Airbnb)", city:"Ishigaki", emoji:"🏝️",
+   photo:"https://upload.wikimedia.org/wikipedia/commons/5/5a/Kabira_Bay_Ishigaki_Island_Okinawa_Japan.jpg",
+   address:"123 Ōhama, Ishigaki, Okinawa 907-0001", phone:"03-5005-0032",
+   nights:"24 jun – 1 jul (7 noches)",
+   note:"Host: Villa Repro / Toru Hada (gestión: 03-5005-0032). Los códigos de acceso (PIN puerta y basura) los llevas aparte en tus notas privadas.",
+   maps:"123 Ohama, Ishigaki, Okinawa 907-0001 Japan"},
+  {id:"h2", name:"Su-wu Padoma", city:"Iriomote", emoji:"🌴",
+   address:"Cerca del puerto de Uehara, Iriomote", phone:"",
+   nights:"1 – 5 jul (4 noches)",
+   note:"Si el ferry a Uehara se cancela por oleaje: ferry a Ohara + shuttle gratis a Uehara (~45-50 min).",
+   maps:"Su-wu Padoma Iriomote Uehara"},
+  {id:"h3", name:"Hotel Tuka Miika", city:"Ishigaki", emoji:"🏨",
+   address:"Ishigaki, Okinawa", phone:"",
+   nights:"5 – 6 jul (1 noche)", note:"Última noche en Ishigaki antes de volar a Tokio.",
+   maps:"Hotel Tuka Miika Ishigaki"},
+  {id:"h4", name:"Dormy Inn Mishima", city:"Mishima", emoji:"♨️",
+   address:"Mishima, Shizuoka", phone:"",
+   nights:"6 – 7 jul (1 noche)", note:"Con onsen. Parada al llegar de Okinawa, camino de Izu.",
+   maps:"Dormy Inn Mishima"},
+  {id:"h5", name:"K's House Ito Onsen", city:"Ito", emoji:"🍵",
+   address:"Ito, Shizuoka", phone:"",
+   nights:"7 – 9 jul (2 noches)", note:"Ryokan histórico con onsen. No admite cancelación, solo cambio de fechas.",
+   maps:"K's House Ito Onsen Historical Ryokan Hostel"},
+  {id:"h6", name:"Casa Shimoda (Airbnb)", city:"Shimoda", emoji:"🌊",
+   address:"Shimoda, Shizuoka", phone:"",
+   nights:"9 – 12 jul (3 noches)", note:"Base para las playas y cascadas de la zona de Izu.",
+   maps:"Shimoda Shizuoka Japan"},
+  {id:"h7", name:"Casa Tokio (Airbnb)", city:"Tokio", emoji:"🏙️",
+   address:"Tokio", phone:"",
+   nights:"12 – 17 jul (5 noches)", note:"Base final en Tokio hasta el vuelo de vuelta.",
+   maps:"Tokyo Japan"}
+];
+
+/* VUELOS */
+const FLIGHTS = [
+  {dir:"Ida", route:"Barcelona → Tokio", from:{code:"BCN",city:"Barcelona",time:"10:15"}, to:{code:"HND",city:"Tokio Haneda",time:"10:55 (+1 día)"}, date:"mar 23 jun 2026", note:"Llegada el día 24. 2.900 € · pagado (Bankinter).", code:""},
+  {dir:"Vuelo interno", route:"Tokio → Ishigaki", from:{code:"HND",city:"Tokio Haneda",time:"16:05"}, to:{code:"ISG",city:"Ishigaki",time:"20:25"}, date:"mié 24 jun 2026", note:"460 € · pagado (Wise).", code:""},
+  {dir:"Vuelo interno", route:"Ishigaki → Tokio", from:{code:"ISG",city:"Ishigaki",time:"10:05"}, to:{code:"HND",city:"Tokio Haneda",time:"14:30"}, date:"lun 6 jul 2026", note:"Después: tren 🚅 a Mishima.", code:""},
+  {dir:"Vuelta", route:"Tokio → Barcelona", from:{code:"HND",city:"Tokio Haneda",time:"08:55"}, to:{code:"BCN",city:"Barcelona",time:"20:35"}, date:"vie 17 jul 2026", note:"Vuelo de vuelta a casa.", code:""}
+];
+
+/* SEGURO  (rellena cuando tengas la póliza) */
+const INSURANCE = {
+  set:false,
+  product:"Por completar", titular:"", insured:[], dest:"Japón (JP)", dates:"13/06/2026 – 28/06/2026", n:2,
+  policy:"", locator:"", provider:"",
+  assist:[]
+};
+
+/* DOCUMENTOS y datos importantes */
+const DOCS = [
+  {lbl:"Host Ishigaki · gestión (09-21h)", val:"03-5005-0032"}
+];
+
+/* AYUDA / EMERGENCIAS */
+const HELP = [
+  {group:"Emergencias en Japón", emoji:"🚨", soft:"red", items:[
+    {name:"Policía", num:"110", wa:""},
+    {name:"Ambulancia y bomberos", num:"119", wa:""},
+    {name:"Información turística Japón (24h)", num:"+81-50-3816-2787", wa:""}
+  ]},
+  {group:"Tu apoyo en destino", emoji:"🤝", soft:"blue", items:[
+    {name:"Host Ishigaki (gestión, 09-21h)", num:"03-5005-0032", wa:""}
+  ]},
+  {group:"España en Japón", emoji:"🇪🇸", soft:"blue", items:[
+    {name:"Embajada de España en Tokio", num:"+81-3-3583-8531", wa:""},
+    {name:"Emergencia consular (fuera de horario)", num:"+81-90-9930-2895", wa:""}
+  ]}
+];
+
+/* DÍAS */
+const DAYS = [
+  {n:1, date:"2026-06-23", title:"Vuelo Barcelona → Tokio", loc:"Barcelona ✈️ Tokio", cat:"experiencia",
+   tags:[["Vuelo","blue"],["Importante","red"]], sleep:"En vuelo",
+   desc:"Salida desde Barcelona a las 10:15 rumbo a Tokio. ¡Empieza el viaje! Vuelo largo, llegada al día siguiente.",
+   notes:["Llega al aeropuerto con al menos 3 horas de antelación.","Revisa los pasaportes antes de salir de casa.","Rellena Visit Japan Web antes de volar.","Lleva a mano los localizadores de reservas."]},
+  {n:2, date:"2026-06-24", title:"Llegada a Tokio y vuelo a Ishigaki", loc:"Tokio ✈️ Ishigaki", cat:"playa",
+   tags:[["Traslado","blue"],["Vuelo","blue"]], sleep:"h1",
+   desc:"Llegada a Tokio Haneda a las 10:55. Por la tarde, vuelo interno a Ishigaki (16:05 → 20:25). ¡Empieza Okinawa!",
+   acts:["kabira","yonehara"],
+   notes:["Check-in casa Ishigaki: códigos de acceso en tus notas privadas.","Compra agua y desayuno de camino a casa."]},
+  {n:3, date:"2026-06-25", title:"Ishigaki — snorkel", loc:"Ishigaki", cat:"playa",
+   tags:[["Playa","teal"],["Día libre","green"]], sleep:"h1",
+   desc:"Primer día completo de playa y snorkel en Ishigaki. Yonehara Beach y vistas de Kabira Bay.",
+   acts:["yonehara","kabira"]},
+  {n:4, date:"2026-06-26", title:"Ishigaki — playas", loc:"Ishigaki", cat:"playa",
+   tags:[["Playa","teal"],["Día libre","green"]], sleep:"h1",
+   desc:"Más snorkel: Shiraho Reef (coral azul) y Sukuji Beach para el atardecer.",
+   acts:["shiraho","sukuji"]},
+  {n:5, date:"2026-06-27", title:"Ishigaki — mantarrayas", loc:"Ishigaki", cat:"experiencia",
+   tags:[["Experiencia","purple"]], sleep:"h1",
+   desc:"Día de excursión: Manta Scramble para nadar con mantarrayas. Reserva la salida en barco con antelación.",
+   acts:["manta"]},
+  {n:6, date:"2026-06-28", title:"Ishigaki — día libre", loc:"Ishigaki", cat:"playa",
+   tags:[["Playa","teal"],["Día libre","green"]], sleep:"h1",
+   desc:"Día flexible: Yoshihara y Crystal Beach, o repetir vuestro spot favorito.",
+   acts:["yoshihara","crystal"]},
+  {n:7, date:"2026-06-29", title:"Ishigaki — día libre", loc:"Ishigaki", cat:"playa",
+   tags:[["Playa","teal"],["Día libre","green"]], sleep:"h1",
+   desc:"Snorkel, descanso o explorar la isla en coche.",
+   acts:["kabira","sukuji"]},
+  {n:8, date:"2026-06-30", title:"Ishigaki — día libre", loc:"Ishigaki", cat:"playa",
+   tags:[["Playa","teal"],["Día libre","green"]], sleep:"h1",
+   desc:"Último día completo en Ishigaki antes de saltar a Iriomote.",
+   acts:["yonehara"]},
+  {n:9, date:"2026-07-01", title:"Ishigaki → Iriomote", loc:"Ishigaki ⛴️ Iriomote", cat:"transporte",
+   tags:[["Traslado","blue"]], sleep:"h2",
+   desc:"Ferry de Ishigaki a Iriomote, la isla más salvaje de Japón. Check-in cerca del puerto de Uehara.",
+   acts:["uehara","iriomote"],
+   notes:["Si el ferry a Uehara se cancela: ferry a Ohara + shuttle gratis a Uehara (~45-50 min).","Devuelve/recoge el coche según lo reservado."]},
+  {n:10, date:"2026-07-02", title:"Iriomote — jungla y kayak", loc:"Iriomote", cat:"naturaleza",
+   tags:[["Naturaleza","teal"],["Día libre","green"]], sleep:"h2",
+   desc:"Kayak por los manglares y trekking hacia la cascada de Pinaisara. Naturaleza salvaje.",
+   acts:["iriomote"], notes:["Lleva repelente y calzado que se pueda mojar."]},
+  {n:11, date:"2026-07-03", title:"Iriomote — día libre", loc:"Iriomote", cat:"naturaleza",
+   tags:[["Naturaleza","teal"],["Día libre","green"]], sleep:"h2",
+   desc:"Más selva, playas vírgenes y ríos. Ritmo tranquilo.",
+   acts:["iriomote"]},
+  {n:12, date:"2026-07-04", title:"Iriomote — día libre", loc:"Iriomote", cat:"naturaleza",
+   tags:[["Naturaleza","teal"],["Día libre","green"]], sleep:"h2",
+   desc:"Último día en Iriomote. Disfruta de la isla antes de volver a Ishigaki.",
+   acts:["iriomote"]},
+  {n:13, date:"2026-07-05", title:"Iriomote → Ishigaki", loc:"Iriomote ⛴️ Ishigaki", cat:"transporte",
+   tags:[["Traslado","blue"]], sleep:"h3",
+   desc:"Ferry de vuelta a Ishigaki y noche en el Hotel Tuka Miika antes de volar mañana a Tokio.",
+   acts:["uehara"]},
+  {n:14, date:"2026-07-06", title:"Ishigaki → Tokio → Mishima", loc:"Ishigaki ✈️ Tokio 🚅 Mishima", cat:"transporte",
+   tags:[["Vuelo","blue"],["Traslado","blue"]], sleep:"h4",
+   desc:"Vuelo Ishigaki → Tokio Haneda (10:05 → 14:30) y tren a Mishima. Noche con onsen en Dormy Inn.",
+   notes:["Recoge el coche de Izu según la reserva.","Llega al aeropuerto con margen."]},
+  {n:15, date:"2026-07-07", title:"Ito — monte Omuro y acantilados", loc:"Ito", cat:"naturaleza",
+   tags:[["Naturaleza","teal"]], sleep:"h5",
+   desc:"Subida en telesilla al monte Omuro y paseo por los acantilados de Jogasaki. Noche en ryokan con onsen.",
+   acts:["omuro","jogasaki"]},
+  {n:16, date:"2026-07-08", title:"Ito — parque de animales", loc:"Ito", cat:"experiencia",
+   tags:[["Día libre","green"]], sleep:"h5",
+   desc:"Día más tranquilo: parque de animales / zoo en la zona de Ito.",
+   acts:["izuzoo"]},
+  {n:17, date:"2026-07-09", title:"Shimoda — playa", loc:"Shimoda", cat:"playa",
+   tags:[["Playa","teal"],["Traslado","blue"]], sleep:"h6",
+   desc:"Nos movemos a Shimoda. Tarde de playa en Shirahama, la más famosa de la zona.",
+   acts:["shirahama"]},
+  {n:18, date:"2026-07-10", title:"Shimoda — cascadas", loc:"Shimoda", cat:"naturaleza",
+   tags:[["Naturaleza","teal"]], sleep:"h6",
+   desc:"Ruta de las cascadas de Kawazu entre bosque y pozas.",
+   acts:["cascadas"]},
+  {n:19, date:"2026-07-11", title:"Shimoda — día libre", loc:"Shimoda", cat:"playa",
+   tags:[["Día libre","green"]], sleep:"h6",
+   desc:"Playa, pueblo o más naturaleza. Último día en Izu.",
+   acts:["shirahama"]},
+  {n:20, date:"2026-07-12", title:"Shimoda → Mishima → Tokio", loc:"Shimoda 🚗 Mishima 🚅 Tokio", cat:"transporte",
+   tags:[["Traslado","blue"]], sleep:"h7",
+   desc:"Devolvemos el coche en Mishima y tren a Tokio. Check-in en la casa de Tokio para los últimos días.",
+   notes:["Deja el coche en Mishima según lo acordado.","Guarda el ticket del tren."]},
+  {n:21, date:"2026-07-13", title:"Tokio — teamLab y ciudad", loc:"Tokio", cat:"experiencia",
+   tags:[["Ciudad","purple"]], sleep:"h7",
+   desc:"Primer día en Tokio. teamLab Planets y paseo por la ciudad.",
+   acts:["teamlab"], notes:["Reserva las entradas de teamLab online."]},
+  {n:22, date:"2026-07-14", title:"Tokio — barrios con encanto", loc:"Tokio", cat:"cultura",
+   tags:[["Ciudad","purple"]], sleep:"h7",
+   desc:"Yanaka Ginza, el Tokio de toda la vida, y café con capibaras.",
+   acts:["yanaka","capibara"]},
+  {n:23, date:"2026-07-15", title:"Tokio — día libre", loc:"Tokio", cat:"cultura",
+   tags:[["Día libre","green"]], sleep:"h7",
+   desc:"Compras, templos, gastronomía… vuestro Tokio a vuestro ritmo.",
+   acts:[]},
+  {n:24, date:"2026-07-16", title:"Tokio — último día", loc:"Tokio", cat:"cultura",
+   tags:[["Día libre","green"]], sleep:"h7",
+   desc:"Último día completo. Compras finales y despedida de Japón.",
+   acts:[]},
+  {n:25, date:"2026-07-17", title:"Tokio → Barcelona", loc:"Tokio ✈️ Barcelona", cat:"experiencia",
+   tags:[["Vuelo","blue"],["Importante","red"]], sleep:"Vuelo de vuelta",
+   desc:"Vuelo de vuelta desde Haneda a las 08:55, llegada a Barcelona a las 20:35. ¡Hasta la próxima, Japón!",
+   notes:["Sal hacia el aeropuerto con tiempo de sobra.","Revisa que no te dejas nada en la casa."]}
+];
+
+/* FRASES */
+const PHRASES = [
+  {cat:"Saludos", emoji:"👋", items:[
+    {es:"Hola", jp:"こんにちは", ro:"konnichiwa"},
+    {es:"Buenos días", jp:"おはようございます", ro:"ohayō gozaimasu"},
+    {es:"Buenas noches", jp:"こんばんは", ro:"konbanwa"},
+    {es:"Adiós", jp:"さようなら", ro:"sayōnara"},
+    {es:"Hasta luego", jp:"またね", ro:"mata ne"}
+  ]},
+  {cat:"Cortesía", emoji:"🙏", items:[
+    {es:"Gracias", jp:"ありがとうございます", ro:"arigatō gozaimasu"},
+    {es:"Por favor", jp:"お願いします", ro:"onegai shimasu"},
+    {es:"Perdón / disculpe", jp:"すみません", ro:"sumimasen"},
+    {es:"Sí", jp:"はい", ro:"hai"},
+    {es:"No", jp:"いいえ", ro:"iie"},
+    {es:"No entiendo", jp:"わかりません", ro:"wakarimasen"},
+    {es:"¿Habla español/inglés?", jp:"英語を話せますか？", ro:"eigo o hanasemasu ka?"}
+  ]},
+  {cat:"En el restaurante", emoji:"🍜", items:[
+    {es:"La cuenta, por favor", jp:"お会計お願いします", ro:"o-kaikei onegai shimasu"},
+    {es:"¿Tienen menú en inglés?", jp:"英語のメニューはありますか？", ro:"eigo no menyū wa arimasu ka?"},
+    {es:"Esto, por favor", jp:"これをください", ro:"kore o kudasai"},
+    {es:"Estaba delicioso", jp:"おいしかったです", ro:"oishikatta desu"},
+    {es:"Soy alérgico/a", jp:"アレルギーがあります", ro:"arerugī ga arimasu"},
+    {es:"Agua, por favor", jp:"お水ください", ro:"o-mizu kudasai"}
+  ]},
+  {cat:"Compras y dinero", emoji:"🛍️", items:[
+    {es:"¿Cuánto cuesta?", jp:"いくらですか？", ro:"ikura desu ka?"},
+    {es:"¿Puedo pagar con tarjeta?", jp:"カードで払えますか？", ro:"kādo de haraemasu ka?"},
+    {es:"Solo estoy mirando", jp:"見ているだけです", ro:"miteiru dake desu"},
+    {es:"¿Tienen una bolsa?", jp:"袋はありますか？", ro:"fukuro wa arimasu ka?"}
+  ]},
+  {cat:"Transporte y direcciones", emoji:"🚆", items:[
+    {es:"¿Dónde está la estación?", jp:"駅はどこですか？", ro:"eki wa doko desu ka?"},
+    {es:"¿Cómo llego a...?", jp:"…へはどう行きますか？", ro:"… e wa dō ikimasu ka?"},
+    {es:"Un billete para..., por favor", jp:"…まで一枚ください", ro:"… made ichimai kudasai"},
+    {es:"¿Dónde está el baño?", jp:"トイレはどこですか？", ro:"toire wa doko desu ka?"},
+    {es:"¿Está libre? (taxi)", jp:"空車ですか？", ro:"kūsha desu ka?"}
+  ]},
+  {cat:"Emergencias", emoji:"🚨", items:[
+    {es:"¡Ayuda!", jp:"助けて！", ro:"tasukete!"},
+    {es:"Llame a una ambulancia", jp:"救急車を呼んでください", ro:"kyūkyūsha o yonde kudasai"},
+    {es:"Me he perdido", jp:"道に迷いました", ro:"michi ni mayoimashita"},
+    {es:"Necesito un médico", jp:"医者が必要です", ro:"isha ga hitsuyō desu"},
+    {es:"¿Dónde hay un hospital?", jp:"病院はどこですか？", ro:"byōin wa doko desu ka?"}
+  ]}
+];
+
+/* ============================================================
+   APP  —  lógica y render
+   ============================================================ */
+const $ = (s,el=document)=>el.querySelector(s);
+const app = $("#app");
+const esc = s => (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mapsUrl = q => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+const placeById = id => PLACES.find(p=>p.id===id);
+const hotelById = id => HOTELS.find(h=>h.id===id);
+
+function fmtDate(iso){
+  const d = new Date(iso+"T00:00:00");
+  let s = d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'});
+  return s.charAt(0).toUpperCase()+s.slice(1);
+}
+function fmtShort(iso){
+  const d = new Date(iso+"T00:00:00");
+  return d.toLocaleDateString('es-ES',{weekday:'short',day:'numeric',month:'short'});
+}
+
+/* Photo block with graceful fallback to gradient + emoji */
+function photo(o){
+  const {photo, emoji, grad, cls=""} = o;
+  const bg = grad || "linear-gradient(160deg,#7fb2ff,#3b6fd4)";
+  const id = "img"+Math.random().toString(36).slice(2,8);
+  const imgTag = photo
+    ? `<img src="${esc(photo)}" alt="" loading="lazy" onload="this.classList.add('loaded')" onerror="this.remove()">`
+    : "";
+  return `<div class="photo ${cls}" style="background:${bg}"><span class="ph-emoji">${emoji||"📍"}</span>${imgTag}</div>`;
+}
+function catPhoto(p, cls){
+  const c = CATS[p.cat]||{};
+  return photo({photo:p.photo, emoji:c.emoji, grad:c.grad, cls});
+}
+
+/* Current / next day relative to today */
+function activeDayIndex(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<DAYS.length;i++){
+    const d = new Date(DAYS[i].date+"T00:00:00");
+    if(d.getTime() >= today.getTime()) return i;
+  }
+  return DAYS.length-1;
+}
+function daysUntilStart(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const s = new Date(TRIP.start+"T00:00:00");
+  return Math.round((s-today)/86400000);
+}
+
+/* ---------- VIEWS ---------- */
+function vInicio(){
+  const idx = activeDayIndex();
+  const day = DAYS[idx];
+  const next = DAYS[idx+1];
+  const hotel = hotelById(day.sleep);
+  const until = daysUntilStart();
+  let cd = "";
+  if(until>1) cd = `🗓️ Faltan ${until} días`;
+  else if(until===1) cd = "🗓️ ¡Mañana empieza!";
+  else if(until<=0 && new Date()<=new Date(TRIP.end+"T23:59:59")) cd = "🌸 Viaje en curso";
+  else cd = "✅ Viaje terminado";
+
+  const c = CATS[day.cat]||{};
+  return `<div class="view">
+    <div style="margin:6px 4px 14px">
+      <div class="jp" style="font-size:17px">こんにちは <span style="color:var(--ink3)">(konnichiwa)</span></div>
+      <h1 style="font-size:30px;font-weight:900;margin-top:2px">¡Hola, ${esc(TRIP.greetName)}! 👋</h1>
+    </div>
+
+    <div class="hero">
+      <div class="hero-grad"></div>
+      ${TRIP.heroPhoto?`<img src="${esc(TRIP.heroPhoto)}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s" onload="this.style.opacity=1" onerror="this.remove()">`:``}
+      <div class="hero-shade"></div>
+      <div class="hero-txt">
+        <div class="scr">${esc(TRIP.name)}</div>
+        <div class="dates">${esc(TRIP.datesLabel)}</div>
+        <div class="countdown">${cd}</div>
+      </div>
+    </div>
+
+    <div class="section-h"><span class="ic">📅</span> ${until>0?"Tu próximo día":"Hoy"}</div>
+    <div class="card grad" style="padding:0;cursor:pointer" onclick="go('dia/${day.n}')">
+      <div class="photo day-card-photo" style="background:${c.grad};border-radius:22px 22px 0 0">
+        <span class="ph-emoji">${c.emoji}</span>
+        <div class="pill-day">Día ${day.n}</div>
+        <div class="overlay"></div>
+        <div class="dc-txt">
+          <div class="dc-date">${fmtDate(day.date)}</div>
+          <div class="dc-title">${esc(day.title)}</div>
+        </div>
+      </div>
+      <div style="padding:14px 16px 16px">
+        <div class="tag-row" style="margin:0 0 10px">${day.tags.map(t=>`<span class="tag t-${t[1]}">${esc(t[0])}</span>`).join("")}</div>
+        <div class="muted">${esc(day.desc)}</div>
+        <div class="linkrow">Ver día completo →</div>
+      </div>
+    </div>
+
+    ${hotel?`<div class="card"><div class="infobar">
+      <div><div class="info-lbl">🛏️ Esta noche dormís en</div>
+      <div class="info-main">${esc(hotel.name)}</div><div class="info-sub">${esc(hotel.city)}</div></div>
+      <a class="btn btn-gray btn-sm" href="${mapsUrl(hotel.maps)}" target="_blank" rel="noopener">📍 Maps</a>
+    </div></div>`:``}
+
+    ${next?`<div class="card nav-card" onclick="go('dia/${next.n}')">
+      <div><span style="color:var(--ink2);font-weight:600">Mañana:</span> <b>${esc(next.title)}</b></div>
+      <span style="color:var(--blue);font-weight:800;font-size:20px">›</span>
+    </div>`:``}
+
+    <div class="qgrid">
+      <div class="qtile" onclick="go('vuelos')"><div class="qi">✈️</div><div class="qt">Vuelos</div></div>
+      <div class="qtile" onclick="go('seguro')"><div class="qi">🛡️</div><div class="qt">Seguro</div></div>
+      <div class="qtile" onclick="go('documentos')"><div class="qi">📄</div><div class="qt">Documentos</div></div>
+      <div class="qtile" onclick="go('hoteles')"><div class="qi">🛏️</div><div class="qt">Hoteles</div></div>
+    </div>
+    <div class="small-note" style="text-align:center;margin:18px 0 4px">Japón 2026 · hecho con cariño 🌸</div>
+  </div>`;
+}
+
+function vDias(){
+  const idx = activeDayIndex();
+  return `<div class="view">
+    <h1 class="page-title">Días</h1>
+    <p class="page-sub">Tu itinerario día a día. Toca un día para ver el detalle.</p>
+    ${DAYS.map((d,i)=>{const c=CATS[d.cat]||{};return `
+      <div class="card grad" style="padding:0;cursor:pointer;margin-top:14px" onclick="go('dia/${d.n}')">
+        <div class="photo day-card-photo" style="background:${c.grad};border-radius:22px 22px 0 0">
+          <span class="ph-emoji">${c.emoji}</span>
+          <div class="pill-day">Día ${d.n}</div>
+          ${i===idx?`<div class="pill-hoy">PRÓXIMO</div>`:``}
+          <div class="overlay"></div>
+          <div class="dc-txt"><div class="dc-date">${fmtDate(d.date)}</div><div class="dc-title">${esc(d.title)}</div></div>
+        </div>
+        <div style="padding:13px 16px 15px">
+          <div class="tag-row" style="margin:0 0 9px">${d.tags.map(t=>`<span class="tag t-${t[1]}">${esc(t[0])}</span>`).join("")}</div>
+          <div class="muted" style="font-size:14px">${esc(d.desc)}</div>
+          <div class="linkrow">Ver día completo →</div>
+        </div>
+      </div>`}).join("")}
+  </div>`;
+}
+
+function vDia(n){
+  const day = DAYS.find(d=>d.n==n); if(!day) return vDias();
+  const c = CATS[day.cat]||{};
+  const hotel = hotelById(day.sleep);
+  const next = DAYS.find(d=>d.n==Number(n)+1);
+  const acts = (day.acts||[]).map(placeById).filter(Boolean);
+  return `<div class="view">
+    <button class="back" onclick="go('dias')">‹ Días</button>
+    <div class="card grad" style="padding:0">
+      <div class="photo" style="background:${c.grad};height:170px;border-radius:22px 22px 0 0">
+        <span class="ph-emoji" style="font-size:64px">${c.emoji}</span>
+        <div class="pill-day">Día ${day.n}</div>
+        ${day.photo?`<img src="${esc(day.photo)}" onload="this.classList.add('loaded')" onerror="this.remove()">`:``}
+        <div class="overlay" style="background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.6))"></div>
+        <div class="dc-txt"><div class="dc-date">${fmtDate(day.date)}</div><div class="dc-title" style="font-size:21px">${esc(day.title)}</div>
+        <div class="info-sub" style="color:#fff;opacity:.9;margin-top:3px">📍 ${esc(day.loc)}</div></div>
+      </div>
+      <div style="padding:15px 16px 17px">
+        <div class="tag-row" style="margin:0 0 11px">${day.tags.map(t=>`<span class="tag t-${t[1]}">${esc(t[0])}</span>`).join("")}</div>
+        <div class="muted">${esc(day.desc)}</div>
+      </div>
+    </div>
+
+    ${hotel?`<div class="card"><div class="infobar">
+      <div><div class="info-lbl">🛏️ Dormís en</div><div class="info-main">${esc(hotel.name)}</div>
+      <div class="info-sub">${esc(hotel.nights)}</div></div>
+      <a class="btn btn-gray btn-sm" href="${mapsUrl(hotel.maps)}" target="_blank" rel="noopener">📍 Maps</a></div></div>`:``}
+
+    ${acts.length?`<div class="section-h"><span class="ic">✦</span> Actividades del día</div>
+      ${acts.map((p,i)=>{const cc=CATS[p.cat]||{};return `
+      <div class="card">
+        ${catPhoto(p,'day-card-photo')}
+        <div style="display:flex;gap:11px;align-items:flex-start;margin-top:13px">
+          <div class="act-num">${i+1}</div>
+          <div style="flex:1">
+            <div class="row-title">${esc(p.name)}</div>
+            <div style="margin:7px 0"><span class="tag t-slate">${cc.emoji} ${esc(cc.label)}</span></div>
+            <div class="muted" style="font-size:14px">${esc(p.desc)}</div>
+            <div class="btn-row" style="margin-top:12px">
+              <button class="btn btn-blue btn-sm" onclick="go('lugar/${p.id}')">ℹ️ Info</button>
+              <a class="btn btn-gray btn-sm" href="${mapsUrl(p.name+' '+p.city)}" target="_blank" rel="noopener">📍 Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>`}).join("")}`:``}
+
+    ${day.notes&&day.notes.length?`<div class="section-h"><span class="ic">📋</span> Notas prácticas</div>
+      <div class="co-list">${day.notes.map(t=>`<div class="callout co-amber" style="margin:0">${esc(t)}</div>`).join("")}</div>`:``}
+
+    ${next?`<div class="card co-blue" style="background:var(--blue-soft)">
+      <div class="info-lbl" style="color:var(--blue-d)">Siguiente paso</div>
+      <div style="font-weight:700;margin:6px 0 12px">Mañana: ${esc(next.title)}.</div>
+      <button class="btn btn-blue btn-block" onclick="go('dia/${next.n}')">Ver día ${next.n} →</button>
+    </div>`:``}
+  </div>`;
+}
+
+let mapFilter = "todos";
+let mapSearch = "";
+function vMapa(){
+  const cities = [...new Set(PLACES.map(p=>p.city))];
+  let list = PLACES.filter(p=>(mapFilter==="todos"||p.cat===mapFilter));
+  if(mapSearch) list = list.filter(p=>(p.name+" "+p.city).toLowerCase().includes(mapSearch.toLowerCase()));
+  const chips = [["todos","Todos","🗾"], ...Object.entries(CATS).map(([k,v])=>[k,v.label,v.emoji])];
+  let html = `<div class="view">
+    <h1 class="page-title">Mapa de lugares</h1>
+    <p class="page-sub">Todos los sitios del viaje: toca «Info» o ábrelos en Google Maps.</p>
+    <div class="search">🔍 <input id="mapsearch" placeholder="Buscar lugar..." value="${esc(mapSearch)}" oninput="mapSearch=this.value;repaintMapList()"></div>
+    <div class="filters">${chips.map(c=>`<button class="chip ${mapFilter===c[0]?'active':''}" onclick="mapFilter='${c[0]}';render()">${c[2]} ${esc(c[1])}</button>`).join("")}</div>
+    <div id="maplist">${renderMapList(list,cities)}</div></div>`;
+  return html;
+}
+function renderMapList(list,cities){
+  if(!list.length) return `<div class="card" style="text-align:center;color:var(--ink2)">No hay lugares para este filtro.</div>`;
+  cities = cities || [...new Set(list.map(p=>p.city))];
+  let out = "";
+  cities.forEach(city=>{
+    const inCity = list.filter(p=>p.city===city);
+    if(!inCity.length) return;
+    out += `<div class="section-h" style="margin-top:20px"><span class="ic">📍</span> ${esc(city)}</div>`;
+    const byCat = {};
+    inCity.forEach(p=>{(byCat[p.cat]=byCat[p.cat]||[]).push(p)});
+    Object.entries(byCat).forEach(([cat,arr])=>{
+      const cc = CATS[cat]||{};
+      out += `<div class="sub-section">${cc.emoji} ${esc(cc.label)}</div>`;
+      arr.forEach(p=>{
+        out += `<div class="card tight"><div class="row">
+          ${catPhoto(p)}
+          <div class="row-body">
+            <div class="row-title">${esc(p.name)}</div>
+            <div class="row-loc">📍 ${esc(p.city)}</div>
+            <div class="btn-row" style="margin-top:10px">
+              <button class="btn btn-blue btn-sm" onclick="go('lugar/${p.id}')">ℹ️ Info</button>
+              <a class="btn btn-gray btn-sm" href="${mapsUrl(p.name+' '+p.city)}" target="_blank" rel="noopener">📍 Maps</a>
+            </div>
+          </div></div></div>`;
+      });
+    });
+  });
+  return out;
+}
+function repaintMapList(){
+  let list = PLACES.filter(p=>(mapFilter==="todos"||p.cat===mapFilter));
+  if(mapSearch) list = list.filter(p=>(p.name+" "+p.city).toLowerCase().includes(mapSearch.toLowerCase()));
+  const el = $("#maplist"); if(el) el.innerHTML = renderMapList(list);
+}
+
+function vLugar(id){
+  const p = placeById(id); if(!p) return vMapa();
+  const cc = CATS[p.cat]||{};
+  const day = p.day ? DAYS.find(d=>d.n===p.day) : null;
+  return `<div class="view">
+    <button class="back" onclick="history.back()">‹ Atrás</button>
+    <div class="card grad" style="padding:0">
+      <div class="photo" style="background:${cc.grad};height:210px;border-radius:22px 22px 0 0">
+        <span class="ph-emoji" style="font-size:74px">${cc.emoji}</span>
+        ${p.photo?`<img src="${esc(p.photo)}" onload="this.classList.add('loaded')" onerror="this.remove()">`:``}
+        <div class="overlay" style="background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.55))"></div>
+        <div class="dc-txt"><div class="dc-title" style="font-size:24px">${esc(p.name)}</div>
+        <div class="info-sub" style="color:#fff;opacity:.92;margin-top:2px">📍 ${esc(p.city)}</div></div>
+      </div>
+      <div style="padding:16px">
+        <div class="muted">${esc(p.desc)}</div>
+        ${p.know?`<div class="callout co-amber"><div class="co-h">✨ ¿SABÍAS QUE…?</div>${esc(p.know)}</div>`:``}
+        ${p.tips&&p.tips.length?`<div class="section-h" style="margin:16px 0 10px"><span class="ic">✅</span> Consejos</div>
+          <div class="co-list">${p.tips.map(t=>`<div class="co-item">${esc(t)}</div>`).join("")}</div>`:``}
+        ${day?`<div style="display:flex;align-items:center;gap:7px;color:var(--blue-d);font-weight:700;margin-top:14px"><span>📅</span> Se visita el día ${day.n} · ${fmtShort(day.date)}</div>`:``}
+        <div class="btn-row" style="margin-top:16px">
+          <a class="btn btn-gray btn-block" href="${mapsUrl(p.name+' '+p.city)}" target="_blank" rel="noopener" style="flex:1">📍 Abrir en Maps</a>
+          ${day?`<button class="btn btn-blue" onclick="go('dia/${day.n}')" style="flex:1">Ver día ${day.n} →</button>`:``}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+let phCat = 0;
+function vFrases(){
+  return `<div class="view">
+    <h1 class="page-title">Frases útiles</h1>
+    <p class="page-sub">Toca «Reproducir» para que el móvil lo diga en japonés, o enseña la pantalla.</p>
+    <div class="filters" style="margin-top:6px">${PHRASES.map((p,i)=>`<button class="chip ${phCat===i?'active':''}" onclick="phCat=${i};render()">${p.emoji} ${esc(p.cat)}</button>`).join("")}</div>
+    <div class="section-h"><span class="ic">${PHRASES[phCat].emoji}</span> ${esc(PHRASES[phCat].cat)}</div>
+    ${PHRASES[phCat].items.map(it=>`<div class="card phrase">
+      <div class="p-es">${esc(it.es)}</div>
+      <div class="p-jp">${esc(it.jp)}</div>
+      <div class="p-ro">(${esc(it.ro)})</div>
+      <button class="btn btn-blue btn-sm" style="margin-top:11px" onclick="speak('${esc(it.jp)}',this)">🔊 Reproducir</button>
+    </div>`).join("")}
+    <div class="small-note" style="text-align:center;margin-top:12px">La voz funciona sin conexión en la mayoría de iPhone (instala la voz japonesa en Ajustes si no suena).</div>
+  </div>`;
+}
+
+function vAyuda(){
+  const softCls = {red:"co-amber",blue:"co-blue"};
+  return `<div class="view">
+    <h1 class="page-title">Ayuda y emergencias</h1>
+    <p class="page-sub">Todos los teléfonos importantes en un solo sitio.</p>
+    ${HELP.map(g=>`
+      <div class="section-h"><span class="ic">${g.emoji}</span> ${esc(g.group)}</div>
+      <div class="card" style="background:${g.soft==='red'?'var(--red-soft)':'var(--blue-soft)'}">
+        ${g.items.map((it,i)=>`<div style="${i>0?'border-top:1px solid rgba(0,0,0,.06);padding-top:13px;margin-top:13px':''}">
+          <div style="font-weight:700;font-size:14px;color:var(--ink2)">${esc(it.name)}</div>
+          <div style="font-weight:900;font-size:21px;margin:2px 0 9px">${esc(it.num)}</div>
+          <div class="btn-row">
+            <a class="btn btn-green btn-sm" href="tel:${esc(it.num.replace(/\s/g,''))}">📞 Llamar</a>
+            ${it.wa?`<a class="btn btn-green btn-sm" style="background:#25d366;box-shadow:none" href="https://wa.me/${esc(it.wa)}" target="_blank" rel="noopener">💬 WhatsApp</a>`:``}
+          </div>
+        </div>`).join("")}
+      </div>`).join("")}
+    <div class="card co-blue" style="background:var(--blue-soft)">
+      <div class="info-lbl" style="color:var(--blue-d)">🛡️ Seguro de viaje</div>
+      <div style="font-weight:700;margin:6px 0 12px">Consulta los datos de tu póliza y asistencia 24h.</div>
+      <button class="btn btn-blue btn-block" onclick="go('seguro')">Ver seguro →</button>
+    </div>
+  </div>`;
+}
+
+function vVuelos(){
+  return `<div class="view">
+    <button class="back" onclick="go('inicio')">‹ Inicio</button>
+    <h1 class="page-title">Vuelos</h1>
+    <p class="page-sub">Tus vuelos del viaje.</p>
+    ${FLIGHTS.map(f=>`<div class="card">
+      <div style="background:linear-gradient(135deg,#5b6478,#3a4254);color:#fff;border-radius:16px;padding:13px 15px;margin:-2px -2px 14px">
+        <div style="font-size:12px;font-weight:800;letter-spacing:.04em;opacity:.85">✈️ ${esc(f.dir.toUpperCase())}</div>
+        <div style="font-weight:900;font-size:20px;margin-top:2px">${esc(f.route)}</div>
+        <div style="font-size:13px;opacity:.9;margin-top:2px">${esc(f.date)}</div>
+      </div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+        <div><div style="font-weight:900;font-size:24px">${esc(f.from.time)}</div><div class="info-sub">${esc(f.from.code)} · ${esc(f.from.city)}</div></div>
+        <div style="color:var(--ink3);font-size:22px;padding-top:4px">→</div>
+        <div style="text-align:right"><div style="font-weight:900;font-size:24px">${esc(f.to.time)}</div><div class="info-sub">${esc(f.to.code)} · ${esc(f.to.city)}</div></div>
+      </div>
+      ${f.note?`<div class="callout co-blue" style="margin:13px 0 0;font-size:13.5px">${esc(f.note)}</div>`:``}
+    </div>`).join("")}
+  </div>`;
+}
+
+function vHoteles(){
+  return `<div class="view">
+    <button class="back" onclick="go('inicio')">‹ Inicio</button>
+    <h1 class="page-title">Hoteles</h1>
+    <p class="page-sub">Dónde dormís cada noche del viaje.</p>
+    ${HOTELS.map(h=>`<div class="card" style="padding:0">
+      <div class="photo" style="background:linear-gradient(160deg,#8fb6ff,#3b6fd4);height:150px;border-radius:22px 22px 0 0">
+        <span class="ph-emoji">${h.emoji||"🏨"}</span>
+        ${h.photo?`<img src="${esc(h.photo)}" onload="this.classList.add('loaded')" onerror="this.remove()">`:``}
+        <div class="overlay" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.55))"></div>
+        <div class="dc-txt" style="position:absolute;left:16px;bottom:13px;color:#fff"><div class="dc-title">${esc(h.name)}</div>
+        <div class="info-sub" style="color:#fff;opacity:.9">📍 ${esc(h.city)}</div></div>
+      </div>
+      <div style="padding:15px 16px 16px">
+        ${h.address?`<div class="muted" style="font-size:14px">📌 ${esc(h.address)}</div>`:``}
+        ${h.phone?`<div class="muted" style="font-size:14px;margin-top:4px">📞 ${esc(h.phone)}</div>`:``}
+        <div style="font-weight:700;margin-top:8px">🛏️ ${esc(h.nights)}</div>
+        ${h.note?`<div class="callout co-amber" style="margin:11px 0 0;font-size:13.5px">${esc(h.note)}</div>`:``}
+        <a class="btn btn-gray btn-block" style="margin-top:13px" href="${mapsUrl(h.maps)}" target="_blank" rel="noopener">📍 Abrir en Maps</a>
+      </div>
+    </div>`).join("")}
+  </div>`;
+}
+
+function vSeguro(){
+  const I = INSURANCE;
+  return `<div class="view">
+    <button class="back" onclick="go('inicio')">‹ Inicio</button>
+    <h1 class="page-title">Seguro de viaje</h1>
+    <p class="page-sub">${esc(I.product)}</p>
+    ${!I.set?`<div class="callout co-amber"><div class="co-h">✏️ Por completar</div>
+      Cuando tengas la póliza del seguro, pásamela y la añado aquí (titular, asegurados, números y teléfonos de asistencia 24h). También puedes editar el archivo tú mismo.</div>`:`
+    <div class="card">
+      <div style="line-height:1.7"><b>Titular:</b> ${esc(I.titular)}<br>
+      <b>Asegurados:</b><br>${I.insured.map(x=>"• "+esc(x)).join("<br>")}<br>
+      <b>Destino:</b> ${esc(I.dest)}<br><b>Fechas:</b> ${esc(I.dates)}<br><b>Nº de asegurados:</b> ${I.n}</div>
+    </div>
+    <div class="section-h"><span class="ic">🎫</span> Números importantes</div>
+    ${[["Nº póliza",I.policy],["Localizador reserva",I.locator],["Localizador proveedor",I.provider]].filter(x=>x[1]).map(x=>copyField(x[0],x[1])).join("")}
+    ${I.assist&&I.assist.length?`<div class="section-h"><span class="ic">📞</span> Asistencia 24 horas</div>
+      ${I.assist.map(a=>`<div class="card"><div style="font-weight:700;color:var(--ink2);font-size:14px">${esc(a.name)}</div>
+      <div style="font-weight:900;font-size:21px;margin:2px 0 9px">${esc(a.num)}</div>
+      <a class="btn btn-green btn-sm" href="tel:${esc(a.num.replace(/\s/g,''))}">📞 Llamar</a></div>`).join("")}`:``}`}
+  </div>`;
+}
+
+function vDocumentos(){
+  return `<div class="view">
+    <button class="back" onclick="go('inicio')">‹ Inicio</button>
+    <h1 class="page-title">Documentos</h1>
+    <p class="page-sub">Datos y códigos importantes a mano. Toca «Copiar».</p>
+    ${DOCS.map(d=>copyField(d.lbl,d.val)).join("")}
+    <div class="callout co-amber" style="margin-top:14px"><div class="co-h">📌 Recuerda</div>
+      Lleva el pasaporte, una copia de las reservas y rellena Visit Japan Web antes de volar.
+      <br><br><b>Códigos privados</b> (PIN de la casa, basura, nº de reserva del coche): guárdalos en las notas de tu móvil, no en esta versión publicada.</div>
+  </div>`;
+}
+function copyField(lbl,val){
+  return `<div class="copy-field"><div style="min-width:0">
+    <div class="cf-lbl">${esc(lbl)}</div><div class="cf-val">${esc(val)}</div></div>
+    <button class="copy-btn" onclick="copyVal('${esc(val).replace(/'/g,"\\'")}',this)">Copiar</button></div>`;
+}
+
+/* ---------- ROUTER ---------- */
+const TABS = [
+  ["inicio","Inicio","🏠"],["dias","Días","📅"],["mapa","Mapa","📍"],["frases","Frases","💬"],["ayuda","Ayuda","🛟"]
+];
+function go(route){ location.hash = "#/"+route; }
+function currentRoute(){ return (location.hash.replace(/^#\//,"")||"inicio"); }
+
+function render(){
+  const r = currentRoute();
+  const [base,arg] = r.split("/");
+  let html="";
+  switch(base){
+    case "inicio": html=vInicio(); break;
+    case "dias": html=vDias(); break;
+    case "dia": html=vDia(arg); break;
+    case "mapa": html=vMapa(); break;
+    case "lugar": html=vLugar(arg); break;
+    case "frases": html=vFrases(); break;
+    case "ayuda": html=vAyuda(); break;
+    case "vuelos": html=vVuelos(); break;
+    case "hoteles": html=vHoteles(); break;
+    case "seguro": html=vSeguro(); break;
+    case "documentos": html=vDocumentos(); break;
+    default: html=vInicio();
+  }
+  app.innerHTML = html;
+  window.scrollTo(0,0);
+  renderTabs(base);
+}
+function renderTabs(base){
+  const map = {inicio:"inicio",dias:"dias",dia:"dias",mapa:"mapa",lugar:"mapa",frases:"frases",ayuda:"ayuda",seguro:"ayuda",vuelos:"inicio",hoteles:"inicio",documentos:"inicio"};
+  const act = map[base]||"inicio";
+  $("#tabbar").innerHTML = TABS.map(t=>`<button class="tab ${act===t[0]?'active':''}" onclick="go('${t[0]}')">
+    <span class="ti">${t[2]}</span><span>${t[1]}</span></button>`).join("");
+}
+
+/* ---------- HELPERS ---------- */
+function speak(text, btn){
+  if(!('speechSynthesis' in window)){ toast("Tu navegador no puede reproducir audio."); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "ja-JP"; u.rate = .9;
+  const v = speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith("ja"));
+  if(v) u.voice = v;
+  if(btn){ const o=btn.innerHTML; btn.innerHTML="🔊 Reproduciendo…"; u.onend=()=>btn.innerHTML=o; u.onerror=()=>btn.innerHTML=o; }
+  speechSynthesis.speak(u);
+}
+function copyVal(val, btn){
+  navigator.clipboard?.writeText(val).then(()=>{ toast("Copiado ✓"); if(btn){const o=btn.textContent;btn.textContent="¡Copiado!";setTimeout(()=>btn.textContent=o,1200);} })
+  .catch(()=>toast("No se pudo copiar"));
+}
+let toastT;
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("show"),1600);
+}
+
+window.addEventListener("hashchange",render);
+window.speechSynthesis && speechSynthesis.getVoices(); // warm up voices
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+render();
+</script>
+</body>
+</html>
