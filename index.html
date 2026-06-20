@@ -193,7 +193,7 @@
    ============================================================ */
 const TRIP = {
   name: "Japón 2026",
-  greetName: "viajeros",          // ← tu nombre para el saludo "¡Hola, ___!"
+  greetName: "familia",          // ← nombre para el saludo "¡Hola, ___!"
   start: "2026-06-23",
   end:   "2026-07-17",
   datesLabel: "23 jun – 17 jul 2026",
@@ -323,8 +323,9 @@ const FLIGHTS = [
 
 /* SEGURO  (rellena cuando tengas la póliza) */
 const INSURANCE = {
-  set:false,
-  product:"Por completar", titular:"", insured:[], dest:"Japón (JP)", dates:"13/06/2026 – 28/06/2026", n:2,
+  set:false,   // ← cambia a true cuando añadas póliza y asistencia 24h
+  product:"Por completar", titular:"", dest:"Japón (JP)", dates:"23/06/2026 – 17/07/2026", n:3,
+  insured:[],
   policy:"", locator:"", provider:"",
   assist:[]
 };
