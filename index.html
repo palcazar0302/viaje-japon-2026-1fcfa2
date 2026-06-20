@@ -303,10 +303,22 @@ const HOTELS = [
 
 /* VUELOS */
 const FLIGHTS = [
-  {dir:"Ida", route:"Barcelona → Tokio", from:{code:"BCN",city:"Barcelona",time:"10:15"}, to:{code:"HND",city:"Tokio Haneda",time:"10:55 (+1 día)"}, date:"mar 23 jun 2026", note:"Llegada el día 24. 2.900 € · pagado (Bankinter).", code:""},
-  {dir:"Vuelo interno", route:"Tokio → Ishigaki", from:{code:"HND",city:"Tokio Haneda",time:"16:05"}, to:{code:"ISG",city:"Ishigaki",time:"20:25"}, date:"mié 24 jun 2026", note:"460 € · pagado (Wise).", code:""},
-  {dir:"Vuelo interno", route:"Ishigaki → Tokio", from:{code:"ISG",city:"Ishigaki",time:"10:05"}, to:{code:"HND",city:"Tokio Haneda",time:"14:30"}, date:"lun 6 jul 2026", note:"Después: tren 🚅 a Mishima.", code:""},
-  {dir:"Vuelta", route:"Tokio → Barcelona", from:{code:"HND",city:"Tokio Haneda",time:"08:55"}, to:{code:"BCN",city:"Barcelona",time:"20:35"}, date:"vie 17 jul 2026", note:"Vuelo de vuelta a casa.", code:""}
+  {dir:"Ida", route:"Barcelona → Tokio", airline:"British Airways · vía Londres", date:"mar 23 jun 2026",
+   conn:"Conexión en Londres: 1h25",
+   legs:[
+     {flight:"BA473", from:{code:"BCN",city:"Barcelona T1",time:"10:15"}, to:{code:"LHR",city:"Londres LHR T5",time:"11:40"}, dur:"2h25"},
+     {flight:"BA005", from:{code:"LHR",city:"Londres LHR T5",time:"13:05"}, to:{code:"HND",city:"Tokio Haneda T3",time:"10:55 (+1 día)"}, dur:"13h50"}
+   ], note:"Economy · llegada el día 24."},
+  {dir:"Vuelo interno", route:"Tokio → Ishigaki", date:"mié 24 jun 2026",
+   legs:[{flight:"", from:{code:"HND",city:"Tokio Haneda",time:"16:05"}, to:{code:"ISG",city:"Ishigaki",time:"20:25"}, dur:""}], note:"460 € · pagado (Wise)."},
+  {dir:"Vuelo interno", route:"Ishigaki → Tokio", date:"lun 6 jul 2026",
+   legs:[{flight:"", from:{code:"ISG",city:"Ishigaki",time:"10:05"}, to:{code:"HND",city:"Tokio Haneda",time:"14:30"}, dur:""}], note:"Después: tren 🚅 a Mishima."},
+  {dir:"Vuelta", route:"Tokio → Barcelona", airline:"British Airways · vía Londres", date:"vie 17 jul 2026",
+   conn:"Conexión en Londres: 1h30",
+   legs:[
+     {flight:"BA008", from:{code:"HND",city:"Tokio Haneda T3",time:"08:55"}, to:{code:"LHR",city:"Londres LHR T5",time:"15:45"}, dur:"14h50"},
+     {flight:"BA484", from:{code:"LHR",city:"Londres LHR T5",time:"17:15"}, to:{code:"BCN",city:"Barcelona T1",time:"20:35"}, dur:"2h20"}
+   ], note:"Economy · vuelta a casa."}
 ];
 
 /* SEGURO  (rellena cuando tengas la póliza) */
@@ -814,6 +826,12 @@ function vAyuda(){
 }
 
 function vVuelos(){
+  const bt = t => { const m=String(t).match(/^(.+?)\s*(\(.*\))$/); return m?`${esc(m[1])}<span style="display:block;font-size:11px;font-weight:700;color:var(--ink3)">${esc(m[2])}</span>`:esc(t); };
+  const leg = l => `<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:4px 0">
+    <div style="flex:1;min-width:0"><div style="font-weight:900;font-size:21px">${bt(l.from.time)}</div><div class="info-sub">${esc(l.from.code)} · ${esc(l.from.city)}</div></div>
+    <div style="text-align:center;color:var(--ink3);font-size:11px;padding-top:5px;flex:0 0 58px">${l.flight?`<div style="font-weight:800;color:var(--blue-d);font-size:12.5px">${esc(l.flight)}</div>`:``}<div style="font-size:16px">→</div>${l.dur?`<div>${esc(l.dur)}</div>`:``}</div>
+    <div style="flex:1;min-width:0;text-align:right"><div style="font-weight:900;font-size:21px">${bt(l.to.time)}</div><div class="info-sub">${esc(l.to.code)} · ${esc(l.to.city)}</div></div>
+  </div>`;
   return `<div class="view">
     <button class="back" onclick="go('inicio')">‹ Inicio</button>
     <h1 class="page-title">Vuelos</h1>
@@ -822,13 +840,10 @@ function vVuelos(){
       <div style="background:linear-gradient(135deg,#5b6478,#3a4254);color:#fff;border-radius:16px;padding:13px 15px;margin:-2px -2px 14px">
         <div style="font-size:12px;font-weight:800;letter-spacing:.04em;opacity:.85">✈️ ${esc(f.dir.toUpperCase())}</div>
         <div style="font-weight:900;font-size:20px;margin-top:2px">${esc(f.route)}</div>
-        <div style="font-size:13px;opacity:.9;margin-top:2px">${esc(f.date)}</div>
+        <div style="font-size:13px;opacity:.9;margin-top:2px">${esc(f.date)}${f.airline?` · ${esc(f.airline)}`:``}</div>
       </div>
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
-        <div><div style="font-weight:900;font-size:24px">${esc(f.from.time)}</div><div class="info-sub">${esc(f.from.code)} · ${esc(f.from.city)}</div></div>
-        <div style="color:var(--ink3);font-size:22px;padding-top:4px">→</div>
-        <div style="text-align:right"><div style="font-weight:900;font-size:24px">${esc(f.to.time)}</div><div class="info-sub">${esc(f.to.code)} · ${esc(f.to.city)}</div></div>
-      </div>
+      ${(f.legs||[]).map((l,i)=>`${i>0?`<div style="text-align:center;color:var(--ink3);font-size:12px;font-weight:600;margin:8px 0;border-top:1px dashed var(--line);padding-top:10px">⏱️ ${esc(f.conn||"Conexión")}</div>`:``}${leg(l)}`).join("")}
+      ${f.ref?`<div style="margin-top:12px">${copyField("Localizador reserva",f.ref)}</div>`:``}
       ${f.note?`<div class="callout co-blue" style="margin:13px 0 0;font-size:13.5px">${esc(f.note)}</div>`:``}
     </div>`).join("")}
   </div>`;
